@@ -1,0 +1,28 @@
+{
+  "Language": "To proceed in English, enter: 'en'.\nPara continuar en español, ingrese 'es'",
+  "validLanguage": "Try again/Volver a intentar",
+  "en": {
+    "welcome": "Welcome to THE CALCULATOR!",
+    "validNum": "Hmm... that does not appear to be a number.",
+    "validOp": "Please choose a valid operation 1 through 5",
+    "validRepeat": "Please enter a valid input",
+    "result": "The result of the operation is ",
+    "repeat": "Would you like to perform another calculation? (y/n)",
+    "number1": "What is the first number?",
+    "number2": "What is the second number?",
+    "operation": "What is your desired operation?\n1) Add 2) Subtract 3) Multiply 4) Divide 5) Remainder",
+    "numbers": "Numbers: "
+  },
+  "es": {
+    "welcome": "Bienvenido a la calculadora!",
+    "validNum": "Eso no es un numero",
+    "validOp": "Elija una operación de 1 a 5",
+    "validRepeat": "Ingrese una entrada válida",
+    "result": "El resultado es ",
+    "repeat": "¿Le gustaría hacer otra operación? (s/n)",
+    "number1": "Cual es el primer numero?",
+    "number2": "Cual es el segundo numero?",
+    "operation": "¿Cuál es su operación deseada?\n 1)Adición 2)Sustracción 3)Multiplicación 4)División 5)Resta",
+    "numbers": "Números: "
+  }
+}
