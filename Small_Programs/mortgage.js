@@ -18,9 +18,9 @@ function valNum(number) {
 }
 
 function validRepeat(response) {
-  while (!['y', 'n'].includes(response.toLowerCase())) {
+  while (!['y', 'n'].includes(response)) {
     console.log('Please enter a valid response - y or n.');
-    response = rdline.question();
+    response = rdline.question().toLowerCase();
   }
   return response;
 }
@@ -37,7 +37,9 @@ while (true) {
   console.log(message["duration"]);
   let duration = valNum(rdline.question());
 
-  let payment = lnAmnt * ((intRt * .01 / 12) / (1 - Math.pow((1 + (intRt * .01 / 12)), (-duration))));
+  let payment = lnAmnt *
+    ((intRt * .01 / 12) /
+      (1 - Math.pow((1 + (intRt * .01 / 12)), (-duration))));
 
   let amount = payment.toFixed(2);
   console.log(message["total"] + `${amount}` + ".");
