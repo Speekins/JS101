@@ -17,19 +17,35 @@ function valNum(number) {
   return number;
 }
 
+function validRepeat(response) {
+  while (!['y', 'n'].includes(response.toLowerCase())) {
+    console.log('Please enter a valid response - y or n.');
+    response = rdline.question();
+  }
+  return response;
+}
+
 console.log(message["welcome"]);
 
-console.log(message["lnAmnt"]);
-let lnAmnt = valNum(rdline.question());
+while (true) {
+  console.log(message["lnAmnt"]);
+  let lnAmnt = valNum(rdline.question());
 
-console.log(message["intRt"]);
-let intRt = valNum(rdline.question());
+  console.log(message["intRt"]);
+  let intRt = valNum(rdline.question());
 
-console.log(message["duration"]);
-let duration = valNum(rdline.question());
+  console.log(message["duration"]);
+  let duration = valNum(rdline.question());
 
-let payment = lnAmnt * ((intRt * .01 / 12) / (1 - Math.pow((1 + (intRt * .01 / 12)), (-duration))));
+  let payment = lnAmnt * ((intRt * .01 / 12) / (1 - Math.pow((1 + (intRt * .01 / 12)), (-duration))));
 
-let amount = payment.toFixed(2);
-console.log(message["total"] + `${amount}` + ".");
+  let amount = payment.toFixed(2);
+  console.log(message["total"] + `${amount}` + ".");
+
+  console.log(message["repeat"]);
+  let redo = validRepeat(rdline.question().toLowerCase());
+  if (redo === 'n') {
+    break;
+  }
+}
 

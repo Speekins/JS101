@@ -1,0 +1,9 @@
+{
+  "welcome": "Welcome to the Loan Calculator!",
+  "invalNum": "Please enter a valid integer and exlude symbols.",
+  "lnAmnt": "What is the loan amount?",
+  "intRt": "What is the interest rate?",
+  "duration": "What is the duration of the loan in months?",
+  "total": "The total monthly payment is $",
+  "repeat": "Would you like to run the Loan Calculator again? y/n"
+}
