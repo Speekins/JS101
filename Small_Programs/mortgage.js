@@ -7,35 +7,29 @@
 //7. Return monthly payment;
 
 let rdline = require('readline-sync');
+let message = require('./mortgage_messages.json');
 
 function valNum(number) {
   while (number.trimStart() === '' || Number.isNaN(Number(number))) {
-    console.log(`Please enter a valid integer.`);
+    console.log(message["invalNum"]);
     number = rdline.question();
   }
   return number;
 }
 
-console.log('Welcome to the Loan Calculator!');
+console.log(message["welcome"]);
 
-console.log('What is the loan amount?');
-let lnAmnt = rdline.question();
-valNum(lnAmnt);
+console.log(message["lnAmnt"]);
+let lnAmnt = valNum(rdline.question());
 
-console.log('What is the interest rate?');
-let intRt = rdline.question();
-while (Number.isNaN(Number(intRt)) || intRt.trimStart() === '') {
-  console.log(`Please enter a valid integer and exlude symbols.`);
-  intRt = rdline.question();
-}
+console.log(message["intRt"]);
+let intRt = valNum(rdline.question());
 
-console.log('What is the duration of the loan in months?');
-let duration = rdline.question();
-valNum(duration);
+console.log(message["duration"]);
+let duration = valNum(rdline.question());
 
-let payment = lnAmnt * ((intRt * .01 / 12) /
-  (1 - Math.pow((1 + (intRt * .01 / 12)), (-duration))));
+let payment = lnAmnt * ((intRt * .01 / 12) / (1 - Math.pow((1 + (intRt * .01 / 12)), (-duration))));
 
 let amount = payment.toFixed(2);
-console.log(`The total monthly payment is $${amount}`);
+console.log(message["total"] + `${amount}` + ".");
 
