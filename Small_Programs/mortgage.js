@@ -19,7 +19,7 @@ function valNum(number) {
 
 function validRepeat(response) {
   while (!['y', 'n'].includes(response)) {
-    console.log('Please enter a valid response - y or n.');
+    console.log(message["validRepeat"]);
     response = rdline.question().toLowerCase();
   }
   return response;
