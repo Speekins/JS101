@@ -1,10 +1,23 @@
 {
-  "welcome": "Welcome to the Loan Calculator!",
-  "invalNum": "Please enter a valid integer and exlude symbols.",
-  "lnAmnt": "What is the loan amount?",
-  "intRt": "What is the interest rate?",
-  "duration": "What is the duration of the loan in months?",
-  "total": "The total monthly payment is $",
-  "validRepeat": "Please enter a valid response - y or n.",
-  "repeat": "Would you like to run the Loan Calculator again? y/n"
+  "language": "To continue in English, enter 'EN'. Continuar en español, entrada 'ES'.",
+  "EN": {
+    "welcome": "Welcome to the Loan Calculator!",
+    "invalNum": "Please enter a valid integer and exlude symbols.",
+    "lnAmnt": "What is the loan amount?",
+    "intRt": "What is the interest rate?",
+    "duration": "What is the duration of the loan in months?",
+    "total": "The total monthly payment is $",
+    "validRepeat": "Please enter a valid response - 'y' or 'n'.",
+    "repeat": "Would you like to run the Loan Calculator again? y/n"
+  },
+  "ES": {
+    "welcome": "Bienvenido a la calculadora de préstamos",
+    "invalNum": "Ingrese un número entero válido y excluya los símbolos",
+    "lnAmnt": "¿Cuál es el monto del préstamo?",
+    "intRt": "¿Cuál es la tasa de interés?",
+    "duration": "¿Cuál es la duración del préstamo en meses?",
+    "total": "El pago mensual total es $",
+    "validRepeat": "Ingrese una respuesta válida - 's' o 'n'.",
+    "repeat": "¿Le gustaría volver a utilizar la calculadora de préstamos? s/n"
+  }
 }
