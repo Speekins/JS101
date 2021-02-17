@@ -20,9 +20,17 @@ function langSelect() {
   language = choice;
 }
 
+function valAmnt(number) {
+  while (number.trimStart() === '' || Number.isNaN(Number(number)) || Number(number) <= 0) {
+    console.log(message[language]["invalAmnt"]);
+    number = rdline.question();
+  }
+  return number;
+}
+
 function valNum(number) {
   while (number.trimStart() === '' || Number.isNaN(Number(number))) {
-    console.log(message["invalNum"]);
+    console.log(message[language]["invalNum"]);
     number = rdline.question();
   }
   return number;
@@ -30,7 +38,7 @@ function valNum(number) {
 
 function validRepeat(response) {
   while (!['y', 'n', 's'].includes(response)) {
-    console.log(message["validRepeat"]);
+    console.log(message[language]["validRepeat"]);
     response = rdline.question().toLowerCase();
   }
   return response;
@@ -41,7 +49,7 @@ console.log(message[language]["welcome"]);
 
 while (true) {
   console.log(message[language]["lnAmnt"]);
-  let lnAmnt = valNum(rdline.question());
+  let lnAmnt = valAmnt(rdline.question());
 
   console.log(message[language]["intRt"]);
   let intRt = valNum(rdline.question());

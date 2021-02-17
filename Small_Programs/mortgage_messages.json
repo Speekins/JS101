@@ -3,7 +3,8 @@
   "valLang": "Please enter a valid response/Ingrese una respuesta válida - 'en'/'es'.",
   "en": {
     "welcome": "Welcome to the Loan Calculator!",
-    "invalNum": "Please enter a valid integer and exlude symbols.",
+    "invalAmnt": "Please enter a valid integer that is greater than 0 and exlude symbols.",
+    "invalNum": "Please enter a valid integer and exlude symbols",
     "lnAmnt": "What is the loan amount?",
     "intRt": "What is the interest rate?",
     "duration": "What is the duration of the loan in months?",
@@ -13,7 +14,8 @@
   },
   "es": {
     "welcome": "Bienvenido a la calculadora de préstamos",
-    "invalNum": "Ingrese un número entero válido y excluya los símbolos",
+    "invalAmnt": "Ingrese un número entero válido que sea mayor que 0 y excluya los símbolos.",
+    "invalNum": "Ingrese un número entero válido y excluya los símbolos.",
     "lnAmnt": "¿Cuál es el monto del préstamo?",
     "intRt": "¿Cuál es la tasa de interés?",
     "duration": "¿Cuál es la duración del préstamo en meses?",
