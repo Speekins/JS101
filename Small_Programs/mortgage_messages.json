@@ -10,10 +10,11 @@
     "duration": "What is the duration of the loan in months?",
     "total": "The total monthly payment is $",
     "validRepeat": "Please enter a valid response - 'y' or 'n'.",
-    "repeat": "Would you like to run the Loan Calculator again? y/n"
+    "repeat": "Would you like to run the Loan Calculator again? y/n",
+    "break": "Until next time!"
   },
   "es": {
-    "welcome": "Bienvenido a la calculadora de préstamos",
+    "welcome": "Bienvenido a La Calculadora de préstamos!",
     "invalAmnt": "Ingrese un número entero válido que sea mayor que 0 y excluya los símbolos.",
     "invalNum": "Ingrese un número entero válido y excluya los símbolos.",
     "lnAmnt": "¿Cuál es el monto del préstamo?",
@@ -21,6 +22,7 @@
     "duration": "¿Cuál es la duración del préstamo en meses?",
     "total": "El pago mensual total es $",
     "validRepeat": "Ingrese una respuesta válida - 's' o 'n'.",
-    "repeat": "¿Le gustaría volver a utilizar la calculadora de préstamos? s/n"
+    "repeat": "¿Le gustaría volver a utilizar la calculadora de préstamos? s/n",
+    "break": "Hasta la proxima vez!"
   }
 }

@@ -1,14 +1,19 @@
-//1. Welcome user
-//2. Ask for the loan amount
-//3. Ask for the interest rate (number only)
-//4. Ask for term in months
-//5. Write function for loan calculation
-//6. Apply given arguments to function
-//7. Return monthly payment;
+//1. Ask user preferred language
+//2. Welcome user
+//3. Ask for the loan amount
+//4. Ask for the interest rate (number only)
+//5. Ask for term in months
+//6. Write function for loan calculation
+//7. Apply given arguments to function
+//8. Return monthly payment;
 
 let rdline = require('readline-sync');
 let message = require('./mortgage_messages.json');
 let language;
+
+function prompt(reply) {
+  console.log(`\n=> ${message[language][reply]}\n`);
+}
 
 function langSelect() {
   console.log(message["langChoice"]);
@@ -22,7 +27,7 @@ function langSelect() {
 
 function valAmnt(number) {
   while (number.trimStart() === '' || Number.isNaN(Number(number)) || Number(number) <= 0) {
-    console.log(message[language]["invalAmnt"]);
+    prompt("invalAmnt");
     number = rdline.question();
   }
   return number;
@@ -30,7 +35,7 @@ function valAmnt(number) {
 
 function valNum(number) {
   while (number.trimStart() === '' || Number.isNaN(Number(number))) {
-    console.log(message[language]["invalNum"]);
+    prompt("invalNum");
     number = rdline.question();
   }
   return number;
@@ -38,35 +43,45 @@ function valNum(number) {
 
 function validRepeat(response) {
   while (!['y', 'n', 's'].includes(response)) {
-    console.log(message[language]["validRepeat"]);
+    prompt("validRepeat");
     response = rdline.question().toLowerCase();
   }
   return response;
 }
+
+function monthly(loan, rate, time) {
+  let payment;
+  if (Number(rate) === 0) {
+    payment = loan / time;
+  } else {
+    payment = loan * ((rate * .01 / 12) /
+      (1 - Math.pow((1 + (rate * .01 / 12)), (-time))));
+  }
+  return payment.toFixed(2);
+}
+
 langSelect();
 
-console.log(message[language]["welcome"]);
+prompt("welcome");
 
 while (true) {
-  console.log(message[language]["lnAmnt"]);
+  prompt("lnAmnt");
   let lnAmnt = valAmnt(rdline.question());
 
-  console.log(message[language]["intRt"]);
+  prompt("intRt");
   let intRt = valNum(rdline.question());
 
-  console.log(message[language]["duration"]);
+  prompt("duration");
   let duration = valNum(rdline.question());
 
-  let payment = lnAmnt *
-    ((intRt * .01 / 12) /
-      (1 - Math.pow((1 + (intRt * .01 / 12)), (-duration))));
+  let amount = monthly(lnAmnt, intRt, duration);
 
-  let amount = payment.toFixed(2);
   console.log(message[language]["total"] + `${amount}` + ".");
 
-  console.log(message[language]["repeat"]);
+  prompt("repeat");
   let redo = validRepeat(rdline.question().toLowerCase());
   if (redo === 'n') {
+    prompt("break");
     break;
   }
 }
