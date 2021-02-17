@@ -1,5 +1,6 @@
 {
   "langChoice": "To continue in English, enter 'en'. Continuar en español, entrada 'es'.",
+  "valLang": "Please enter a valid response/Ingrese una respuesta válida - 'en'/'es'.",
   "en": {
     "welcome": "Welcome to the Loan Calculator!",
     "invalNum": "Please enter a valid integer and exlude symbols.",

@@ -14,7 +14,7 @@ function langSelect() {
   console.log(message["langChoice"]);
   let choice = rdline.question().toLowerCase();
   while (!['es', 'en'].includes(choice)) {
-    console.log('Please entera valid response/Ingrese una respuesta válida - "en"/"es".');
+    console.log(message["valLang"]);
     choice = rdline.question().toLowerCase();
   }
   language = choice;
