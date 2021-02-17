@@ -8,15 +8,16 @@
 
 let rdline = require('readline-sync');
 let message = require('./mortgage_messages.json');
+let language;
 
-function langSelect(response) {
-  let choice;
-  if (response === 'ES') {
-    choice = 'ES';
-  } else {
-    choice = 'EN';
+function langSelect() {
+  console.log(message["langChoice"]);
+  let choice = rdline.question().toLowerCase();
+  while (!['es', 'en'].includes(choice)) {
+    console.log('Please entera valid response/Ingrese una respuesta válida - "en"/"es".');
+    choice = rdline.question().toLowerCase();
   }
-  return choice;
+  language = choice;
 }
 
 function valNum(number) {
@@ -34,8 +35,7 @@ function validRepeat(response) {
   }
   return response;
 }
-console.log(message["language"]);
-let language = langSelect(rdline.question().toUpperCase());
+langSelect();
 
 console.log(message[language]["welcome"]);
 

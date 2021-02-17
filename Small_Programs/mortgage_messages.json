@@ -1,6 +1,6 @@
 {
-  "language": "To continue in English, enter 'EN'. Continuar en español, entrada 'ES'.",
-  "EN": {
+  "langChoice": "To continue in English, enter 'en'. Continuar en español, entrada 'es'.",
+  "en": {
     "welcome": "Welcome to the Loan Calculator!",
     "invalNum": "Please enter a valid integer and exlude symbols.",
     "lnAmnt": "What is the loan amount?",
@@ -10,7 +10,7 @@
     "validRepeat": "Please enter a valid response - 'y' or 'n'.",
     "repeat": "Would you like to run the Loan Calculator again? y/n"
   },
-  "ES": {
+  "es": {
     "welcome": "Bienvenido a la calculadora de préstamos",
     "invalNum": "Ingrese un número entero válido y excluya los símbolos",
     "lnAmnt": "¿Cuál es el monto del préstamo?",
