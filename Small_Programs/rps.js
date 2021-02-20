@@ -1,6 +1,20 @@
 const rdln = require('readline-sync');
 const RPS = ['rock', 'paper', 'scissors'];
 
+function displayWinner(choice, comp) {
+  if ((choice === 'rock' && comp === 'scissors') ||
+    (choice === 'paper' && comp === 'rock') ||
+    (choice === 'scissors' && comp === 'paper')) {
+    prompt('You win!');
+  } else if ((choice === 'scissors' && comp === 'rock') ||
+    (choice === 'rock' && comp === 'paper') ||
+    (choice === 'paper' && comp === 'scissors')) {
+    prompt('Computer wins!');
+  } else {
+    prompt(`It's a tie! How boring...`);
+  }
+}
+
 function prompt(message) {
   console.log(`=> ${message}`);
 }
@@ -17,7 +31,7 @@ function compChoice(number) {
 }
 
 function validRepeat(reply) {
-  while (!['n', 'y'].includes(reply)) {
+  while (!['n', 'y', 'no', 'yes'].includes(reply)) {
     prompt('Please enter a valid response - y or n');
     reply = rdln.question().toLowerCase();
   }
@@ -37,25 +51,11 @@ while (true) {
 
   prompt(`You chose ${choice}, computer chose ${comp}`);
 
-  if ((choice === 'rock' && comp === 'scissors') ||
-    (choice === 'paper' && comp === 'rock') ||
-    (choice === 'scissors' && comp === 'paper')) {
-    prompt('You win!');
-  }
-
-  if ((choice === 'scissors' && comp === 'rock') ||
-    (choice === 'rock' && comp === 'paper') ||
-    (choice === 'paper' && comp === 'scissors')) {
-    prompt('Computer wins!');
-  }
-
-  if (choice === comp) {
-    prompt(`It's a tie! How boring...`);
-  }
+  displayWinner(choice, comp);
 
   prompt(`Would you like to play again? Hit y or n`);
   let again = validRepeat(rdln.question().toLowerCase());
-  if (again === 'n') {
+  if (again[0] === 'n') {
     prompt('See ya!');
     break;
   }
