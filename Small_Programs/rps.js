@@ -1,5 +1,8 @@
 const rdln = require('readline-sync');
 const RPS = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
+let computerWins = [];
+let userWins = [];
+let ties = [];
 
 function prompt(message) {
   console.log(`=> ${message}`);
@@ -29,15 +32,13 @@ function displayWinner(choice, comp) {
     (choice === 'scissors' && (comp === 'paper' || comp === 'lizard')) ||
     (choice === 'spock' && (comp === 'rock' || comp === 'scissors')) ||
     (choice === 'lizard' && (comp === 'paper' || comp === 'spock'))) {
-    prompt('You win!');
-  } else if ((choice === 'scissors' && (comp === 'rock' || comp === 'spock')) ||
-    (choice === 'rock' && (comp === 'paper' || comp === 'spock')) ||
-    (choice === 'paper' && (comp === 'scissors' || comp === 'lizard')) ||
-    (choice === 'spock' && (comp === 'paper' || comp === 'lizard')) ||
-    (choice === 'lizard' && (comp === 'scissors' || comp === 'rock'))) {
-    prompt('Computer wins!');
-  } else {
+    let userWin = 1;
+    return userWin;
+  } else if (choice === comp) {
     prompt(`It's a tie! How boring...`);
+  } else {
+    let compWin = 2;
+    return compWin;
   }
 }
 
@@ -50,21 +51,45 @@ function validRepeat(reply) {
 }
 
 while (true) {
-  prompt(`Choose one: ${RPS.join(', ')}`);
-  let choice = rdln.question();
+  for (let counter = 1; counter < 6; counter++) {
 
-  while (!RPS.includes(choice)) {
-    prompt('Please enter a valid response.');
-    choice = rdln.question();
+    prompt(`Choose one: ${RPS.join(', ')}`);
+    let choice = rdln.question();
+
+    while (!RPS.includes(choice)) {
+      prompt('Please enter a valid response.');
+      choice = rdln.question();
+    }
+
+    let comp = compChoice();
+
+    prompt(`You chose ${choice}, computer chose ${comp}`);
+
+    displayWinner(choice, comp);
+
+    if (displayWinner(choice, comp) === 1) {
+      userWins.push(1);
+    } else if (displayWinner(choice, comp) === 2) {
+      computerWins.push(1);
+    } else {
+      ties.push(1);
+    }
+
+    prompt(`Your score: ${userWins.length}. Computer score: ${computerWins.length}.`);
+
+    if (userWins.length === 3) {
+      prompt('Best of 5! You win!');
+      break;
+    } else if (computerWins.length === 3) {
+      prompt('Best of 5! Computers wins!');
+      break;
+    } else if (ties.length === 3 && userWins.length === computerWins.length) {
+      prompt('This round is a tie :/');
+      break;
+    }
   }
 
-  let comp = compChoice();
-
-  prompt(`You chose ${choice}, computer chose ${comp}`);
-
-  displayWinner(choice, comp);
-
-  prompt(`Would you like to play again? Hit y or n`);
+  prompt(`Would you like to play another round? Hit y or n`);
   let again = validRepeat(rdln.question().toLowerCase());
   if (again[0] === 'n') {
     prompt('See ya!');
