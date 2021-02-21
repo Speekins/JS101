@@ -1,32 +1,43 @@
 const rdln = require('readline-sync');
-const RPS = ['rock', 'paper', 'scissors'];
-
-function displayWinner(choice, comp) {
-  if ((choice === 'rock' && comp === 'scissors') ||
-    (choice === 'paper' && comp === 'rock') ||
-    (choice === 'scissors' && comp === 'paper')) {
-    prompt('You win!');
-  } else if ((choice === 'scissors' && comp === 'rock') ||
-    (choice === 'rock' && comp === 'paper') ||
-    (choice === 'paper' && comp === 'scissors')) {
-    prompt('Computer wins!');
-  } else {
-    prompt(`It's a tie! How boring...`);
-  }
-}
+const RPS = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
 
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
-function compChoice(number) {
-  number = Math.floor(Math.random() * 3);
-  if (number === 0) {
-    return RPS[0];
-  } else if (number === 1) {
-    return RPS[1];
+// eslint-disable-next-line consistent-return
+function compChoice() {
+  let random = Math.floor(Math.random() * 5);
+  switch (true) {
+    case random === 0:
+      return RPS[0];
+    case random === 1:
+      return RPS[1];
+    case random === 2:
+      return RPS[2];
+    case random === 3:
+      return RPS[3];
+    case random === 4:
+      return RPS[4];
+  }
+}
+
+// eslint-disable-next-line complexity
+function displayWinner(choice, comp) {
+  if ((choice === 'rock' && (comp === 'scissors' || comp === 'lizard')) ||
+    (choice === 'paper' && (comp === 'rock' || comp === 'spock')) ||
+    (choice === 'scissors' && (comp === 'paper' || comp === 'lizard')) ||
+    (choice === 'spock' && (comp === 'rock' || comp === 'scissors')) ||
+    (choice === 'lizard' && (comp === 'paper' || comp === 'spock'))) {
+    prompt('You win!');
+  } else if ((choice === 'scissors' && (comp === 'rock' || comp === 'spock')) ||
+    (choice === 'rock' && (comp === 'paper' || comp === 'spock')) ||
+    (choice === 'paper' && (comp === 'scissors' || comp === 'lizard')) ||
+    (choice === 'spock' && (comp === 'paper' || comp === 'lizard')) ||
+    (choice === 'lizard' && (comp === 'scissors' || comp === 'rock'))) {
+    prompt('Computer wins!');
   } else {
-    return RPS[2];
+    prompt(`It's a tie! How boring...`);
   }
 }
 
