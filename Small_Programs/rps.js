@@ -1,5 +1,8 @@
 const rdln = require('readline-sync');
 const RPS = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
+
+console.clear();
+
 let computerWins = [];
 let userWins = [];
 let ties = [];
@@ -8,7 +11,6 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
-// eslint-disable-next-line consistent-return
 function compChoice() {
   let random = Math.floor(Math.random() * 5);
   switch (true) {
@@ -25,7 +27,6 @@ function compChoice() {
   }
 }
 
-// eslint-disable-next-line complexity
 function displayWinner(choice, comp) {
   if ((choice === 'rock' && (comp === 'scissors' || comp === 'lizard')) ||
     (choice === 'paper' && (comp === 'rock' || comp === 'spock')) ||
@@ -51,6 +52,7 @@ function validRepeat(reply) {
 }
 
 while (true) {
+  console.clear();
   for (let counter = 1; counter < 6; counter++) {
 
     prompt(`Choose one: ${RPS.join(', ')}`);
@@ -65,11 +67,11 @@ while (true) {
 
     prompt(`You chose ${choice}, computer chose ${comp}`);
 
-    displayWinner(choice, comp);
+    let result = displayWinner(choice, comp);
 
-    if (displayWinner(choice, comp) === 1) {
+    if (result === 1) {
       userWins.push(1);
-    } else if (displayWinner(choice, comp) === 2) {
+    } else if (result === 2) {
       computerWins.push(1);
     } else {
       ties.push(1);
@@ -83,7 +85,9 @@ while (true) {
     } else if (computerWins.length === 3) {
       prompt('Best of 5! Computers wins!');
       break;
-    } else if (ties.length === 3 && userWins.length === computerWins.length) {
+      // eslint-disable-next-line max-len
+    } else if ((ties.length === 1 && (userWins.length === 2 && computerWins.length === 2)) ||
+      (ties.length === 3 && (userWins.length === computerWins.length))) {
       prompt('This round is a tie :/');
       break;
     }
@@ -94,5 +98,9 @@ while (true) {
   if (again[0] === 'n') {
     prompt('See ya!');
     break;
+  } else if (again[0] === 'y') {
+    computerWins = [];
+    userWins = [];
+    ties = [];
   }
 }
