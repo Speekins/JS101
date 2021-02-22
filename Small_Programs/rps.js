@@ -10,6 +10,14 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
+function validChoice(choice) {
+  while (!RPS.includes(choice)) {
+    prompt('Please enter a valid response.');
+    choice = rdln.question().toLowerCase();
+  }
+  return choice;
+}
+
 function compChoice() {
   let random = Math.floor(Math.random() * 5);
   switch (true) {
@@ -42,6 +50,14 @@ function displayWinner(choice, comp) {
   }
 }
 
+function scoreKeeper(result) {
+  if (result === 1) {
+    userWins.push(1);
+  } else if (result === 2) {
+    computerWins.push(1);
+  }
+}
+
 function validRepeat(reply) {
   while (!['n', 'y', 'no', 'yes'].includes(reply)) {
     prompt('Please enter a valid response - y or n');
@@ -54,12 +70,7 @@ while (true) {
   while (true) {
 
     prompt(`Choose one: ${RPS.join(', ')}`);
-    let choice = rdln.question();
-
-    while (!RPS.includes(choice)) {
-      prompt('Please enter a valid response.');
-      choice = rdln.question();
-    }
+    let choice = validChoice(rdln.question().toLowerCase());
 
     let comp = compChoice();
 
@@ -67,11 +78,7 @@ while (true) {
 
     let result = displayWinner(choice, comp);
 
-    if (result === 1) {
-      userWins.push(1);
-    } else if (result === 2) {
-      computerWins.push(1);
-    }
+    scoreKeeper(result);
 
     prompt(`Your score: ${userWins.length}. Computer score: ${computerWins.length}.`);
 
@@ -79,7 +86,7 @@ while (true) {
       prompt('First to 5! You are the grand champion!');
       break;
     } else if (computerWins.length === 5) {
-      prompt('First to 5! Computers wins!');
+      prompt('First to 5! Computer wins!');
       break;
     }
   }
