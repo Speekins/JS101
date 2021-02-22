@@ -5,7 +5,6 @@ console.clear();
 
 let computerWins = [];
 let userWins = [];
-let ties = [];
 
 function prompt(message) {
   console.log(`=> ${message}`);
@@ -52,8 +51,7 @@ function validRepeat(reply) {
 }
 
 while (true) {
-  console.clear();
-  for (let counter = 1; counter < 6; counter++) {
+  while (true) {
 
     prompt(`Choose one: ${RPS.join(', ')}`);
     let choice = rdln.question();
@@ -73,22 +71,15 @@ while (true) {
       userWins.push(1);
     } else if (result === 2) {
       computerWins.push(1);
-    } else {
-      ties.push(1);
     }
 
     prompt(`Your score: ${userWins.length}. Computer score: ${computerWins.length}.`);
 
-    if (userWins.length === 3) {
-      prompt('Best of 5! You win!');
+    if (userWins.length === 5) {
+      prompt('First to 5! You are the grand champion!');
       break;
-    } else if (computerWins.length === 3) {
-      prompt('Best of 5! Computers wins!');
-      break;
-      // eslint-disable-next-line max-len
-    } else if ((ties.length === 1 && (userWins.length === 2 && computerWins.length === 2)) ||
-      (ties.length === 3 && (userWins.length === computerWins.length))) {
-      prompt('This round is a tie :/');
+    } else if (computerWins.length === 5) {
+      prompt('First to 5! Computers wins!');
       break;
     }
   }
@@ -101,6 +92,5 @@ while (true) {
   } else if (again[0] === 'y') {
     computerWins = [];
     userWins = [];
-    ties = [];
   }
 }
