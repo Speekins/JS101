@@ -1,5 +1,6 @@
 const rdln = require('readline-sync');
 const RPS = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
+const matchWin = 5;
 
 let computerWins = [];
 let userWins = [];
@@ -21,35 +22,44 @@ function compChoice() {
   return RPS[random];
 }
 
-function displayWinner(choice, comp) {
+function decideWinner(choice, comp) {
   if ((choice === 'rock' && (comp === 'scissors' || comp === 'lizard')) ||
     (choice === 'paper' && (comp === 'rock' || comp === 'spock')) ||
     (choice === 'scissors' && (comp === 'paper' || comp === 'lizard')) ||
     (choice === 'spock' && (comp === 'rock' || comp === 'scissors')) ||
     (choice === 'lizard' && (comp === 'paper' || comp === 'spock'))) {
-    let userWin = 1;
-    return userWin;
+    return 'userWin';
   } else if (choice === comp) {
-    prompt(`It's a tie! How boring...`);
+    return 'tie';
   } else {
-    let compWin = 2;
-    return compWin;
+    return 'compWin';
+  }
+}
+
+
+function displayWinner(result) {
+  if (result === 'userWin') {
+    prompt(`That's a W for you!`);
+  } else if (result === 'compWin') {
+    prompt(`Here's your L.`);
+  } else if (result === 'tie') {
+    prompt(`It's a tie! How boring...`);
   }
 }
 
 function scoreKeeper(result) {
-  if (result === 1) {
+  if (result === 'userWin') {
     userWins.push(1);
-  } else if (result === 2) {
+  } else if (result === 'compWin') {
     computerWins.push(1);
   }
 }
 
 function grandChampion() {
-  if (userWins.length === 5) {
+  if (userWins.length === matchWin) {
     prompt('First to 5! You are the grand champion!');
     return true;
-  } else if (computerWins.length === 5) {
+  } else if (computerWins.length === matchWin) {
     prompt('First to 5! Computer wins!');
     return true;
   }
@@ -64,8 +74,8 @@ function validRepeat(reply) {
 }
 
 while (true) {
+  prompt(`Welcome to ROCK/PAPER/SCISSORS/SPOCK/LIZARD\nWhoever (you or the computer) is first to 5 total wins is the GRAND CHAMPION!\n`);
   while (true) {
-
     prompt(`Choose one: ${RPS.join(', ')}`);
     let choice = validChoice(rdln.question().toLowerCase());
 
@@ -73,7 +83,9 @@ while (true) {
 
     prompt(`You chose ${choice}, computer chose ${comp}`);
 
-    let result = displayWinner(choice, comp);
+    let result = decideWinner(choice, comp);
+
+    displayWinner(result);
 
     scoreKeeper(result);
 
