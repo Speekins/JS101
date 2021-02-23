@@ -2,8 +2,8 @@ const rdln = require('readline-sync');
 const RPS = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
 const matchWin = 5;
 
-let computerWins = [];
-let userWins = [];
+let computerWins = 0;
+let userWins = 0;
 
 function prompt(message) {
   console.log(`=> ${message}`);
@@ -48,18 +48,18 @@ function displayWinner(result) {
 }
 
 function scoreKeeper(result) {
-  if (result === 'userWin') {
-    userWins.push(1);
-  } else if (result === 'compWin') {
-    computerWins.push(1);
+  if (result === 'userWin' && userWins < matchWin) {
+    userWins++;
+  } else if (result === 'compWin' && computerWins < matchWin) {
+    computerWins++;
   }
 }
 
 function grandChampion() {
-  if (userWins.length === matchWin) {
+  if (userWins === matchWin) {
     prompt('First to 5! You are the grand champion!');
     return true;
-  } else if (computerWins.length === matchWin) {
+  } else if (computerWins === matchWin) {
     prompt('First to 5! Computer wins!');
     return true;
   }
@@ -89,7 +89,7 @@ while (true) {
 
     scoreKeeper(result);
 
-    prompt(`Your score: ${userWins.length}. Computer score: ${computerWins.length}.`);
+    prompt(`Your score: ${userWins}. Computer score: ${computerWins}.`);
 
     if (grandChampion() === true) {
       break;
@@ -102,8 +102,8 @@ while (true) {
     console.clear();
     break;
   } else if (again[0] === 'y') {
-    computerWins = [];
-    userWins = [];
+    computerWins = 0;
+    userWins = 0;
     console.clear();
   }
 }
