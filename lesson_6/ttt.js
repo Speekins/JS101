@@ -10,6 +10,8 @@ const rdln = require('readline-sync');
 const INITIAL_MARKER = ' ';
 const PLAYER_MARKER = 'X';
 const COMPUTER_MARKER = 'O';
+let playerMatches = 0;
+let compMatches = 0;
 
 function prompt(message) {
   console.log(`=> ${message}`);
@@ -105,6 +107,20 @@ function decideWinner(board) {
   return false;
 }
 
+function matches() {
+  if (playerMatches === 5 || compMatches === 5) {
+    return Math.max(playerMatches, compMatches);
+  }
+}
+
+function decideGrandChampion() {
+  if (playerMatches === 5) {
+    prompt(`Game. Set. Match. You are the grand champion!`);
+  } else if (compMatches === 5) {
+    prompt(`Computer is the grand champion!`);
+  }
+}
+
 function validRepeat(response) {
   if (response !== 'y' && response !== 'n') {
     prompt(`Please enter a valid response. y or n`);
@@ -118,26 +134,43 @@ while (true) {
   let board = initializeBoard();
 
   while (true) {
+    while (true) {
+      displayBoard(board);
+
+      playerChoosesSquare(board);
+      if (decideWinner(board) || boardIsFull(board)) break;
+
+      computerChoosesSquare(board);
+      if (decideWinner(board) || boardIsFull(board)) break;
+    }
+
     displayBoard(board);
 
-    playerChoosesSquare(board);
-    if (decideWinner(board) || boardIsFull(board)) break;
+    if (decideWinner(board)) {
+      prompt(`${decideWinner(board)} won!`);
+    } else {
+      prompt("It's a tie!");
+    }
 
-    computerChoosesSquare(board);
-    if (decideWinner(board) || boardIsFull(board)) break;
+    if (decideWinner(board) === 'Player') {
+      playerMatches += 1;
+    } else if (decideWinner(board) === 'Computer') {
+      compMatches += 1;
+    }
+
+    prompt(`You have won ${playerMatches} games. Computer has won ${compMatches} games.`);
+
+    if (matches() === 5) break;
   }
-
-  displayBoard(board);
-
-  if (decideWinner(board)) {
-    prompt(`${decideWinner(board)} won!`);
-  } else {
-    prompt("It's a tie!");
-  }
+  decideGrandChampion();
 
   prompt(`Would you like to play again? y/n`);
   let response = validRepeat(rdln.question().toLowerCase());
 
+  if (response === 'y') {
+    playerMatches = 0;
+    compMatches = 0;
+  }
   if (response === 'n') break;
 
 }
