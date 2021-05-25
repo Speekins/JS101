@@ -10,8 +10,8 @@ const rdln = require('readline-sync');
 const INITIAL_MARKER = ' ';
 const PLAYER_MARKER = 'X';
 const COMPUTER_MARKER = 'O';
-let playerMatches = 0;
-let compMatches = 0;
+let playerWins = 0;
+let compWins = 0;
 
 function prompt(message) {
   console.log(`=> ${message}`);
@@ -20,6 +20,7 @@ function prompt(message) {
 function displayBoard(board) {
   console.clear();
 
+  prompt(`You have won ${playerWins} games. Computer has won ${compWins} games.`);
   console.log('');
   console.log('     |     |');
   console.log(`  ${board[1]}  |  ${board[2]}  |  ${board[3]}`);
@@ -107,16 +108,15 @@ function decideWinner(board) {
   return false;
 }
 
-function matches() {
-  if (playerMatches === 5 || compMatches === 5) {
-    return Math.max(playerMatches, compMatches);
-  }
+function scoreKeeper(board) {
+  if (decideWinner(board) === 'Player') playerMatches += 1;
+  if (decideWinner(board) === 'Computer') compMatches += 1;
 }
 
 function decideGrandChampion() {
-  if (playerMatches === 5) {
+  if (playerWins === 5) {
     prompt(`Game. Set. Match. You are the grand champion!`);
-  } else if (compMatches === 5) {
+  } else if (compWins === 5) {
     prompt(`Computer is the grand champion!`);
   }
 }
@@ -124,16 +124,23 @@ function decideGrandChampion() {
 function validRepeat(response) {
   if (response !== 'y' && response !== 'n') {
     prompt(`Please enter a valid response. y or n`);
-    response = rdln.question().toLowerCase();
+    response = validRepeat(rdln.question().toLowerCase());
   }
   return response;
 }
 
+function validNextGame(response) {
+  if (response !== 'c') {
+    prompt(`Please enter 'c' when ready to continue.`);
+    response = validNextGame(rdln.question().toLowerCase());
+  }
+  return response;
+}
 
 while (true) {
-  let board = initializeBoard();
+  while (playerWins < 5 && compWins < 5) {
+    let board = initializeBoard();
 
-  while (true) {
     while (true) {
       displayBoard(board);
 
@@ -153,26 +160,25 @@ while (true) {
     }
 
     if (decideWinner(board) === 'Player') {
-      playerMatches += 1;
+      playerWins += 1;
     } else if (decideWinner(board) === 'Computer') {
-      compMatches += 1;
+      compWins += 1;
     }
 
-    prompt(`You have won ${playerMatches} games. Computer has won ${compMatches} games.`);
-
-    if (matches() === 5) break;
+    prompt(`When ready for next game hit 'c'.`);
+    let response = validNextGame(rdln.question().toLowerCase());
+    if (response === 'c') continue;
   }
+
   decideGrandChampion();
 
-  prompt(`Would you like to play again? y/n`);
+  prompt(`Would you like to play another round? y/n`);
   let response = validRepeat(rdln.question().toLowerCase());
 
   if (response === 'y') {
-    playerMatches = 0;
-    compMatches = 0;
+    playerWins = 0;
+    compWins = 0;
   }
   if (response === 'n') break;
 
 }
-console.clear();
-prompt("Thanks for playing Tic-Tac-Toe!\n");
