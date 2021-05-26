@@ -101,8 +101,14 @@ function decideWinner(board) {
 }
 
 function scoreKeeper(board) {
-  if (decideWinner(board) === 'Player') playerMatches += 1;
-  if (decideWinner(board) === 'Computer') compMatches += 1;
+  if (decideWinner(board) === 'Player') playerWins += 1;
+  if (decideWinner(board) === 'Computer') compWins += 1;
+}
+
+function advance() {
+  if (playerWins === 5 || compWins === 5) return false;
+  prompt(`When ready for next game hit 'c'.`);
+  let response = validNextGame(rdln.question().toLowerCase());
 }
 
 function decideGrandChampion() {
@@ -144,8 +150,6 @@ while (true) {
       if (decideWinner(board) || boardIsFull(board)) break;
     }
 
-    displayBoard(board);
-
     if (decideWinner(board)) {
       prompt(`${decideWinner(board)} won!`);
     } else {
@@ -158,9 +162,9 @@ while (true) {
       compWins += 1;
     }
 
-    prompt(`When ready for next game hit 'c'.`);
-    let response = validNextGame(rdln.question().toLowerCase());
-    if (response === 'c') continue;
+    displayBoard(board);
+
+    if (advance()) continue;
   }
 
   decideGrandChampion();
