@@ -2,6 +2,8 @@ const rdln = require('readline-sync');
 const INITIAL_MARKER = ' ';
 const PLAYER_MARKER = 'X';
 const COMPUTER_MARKER = 'O';
+const WINNING_COMBOS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7],
+[2, 5, 8], [3, 6, 9], [3, 5, 7], [1, 5, 9]];
 let playerWins = 0;
 let compWins = 0;
 
@@ -78,11 +80,9 @@ function boardIsFull(board) {
 
 // eslint-disable-next-line max-lines-per-function
 function decideWinner(board) {
-  let winningCombos = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7],
-  [2, 5, 8], [3, 6, 9], [3, 5, 7], [1, 5, 9]];
 
-  for (let idx = 0; idx < winningCombos.length; idx++) {
-    let [sq1, sq2, sq3] = winningCombos[idx];
+  for (let idx = 0; idx < WINNING_COMBOS.length; idx++) {
+    let [sq1, sq2, sq3] = WINNING_COMBOS[idx];
     if (
       board[sq1] === PLAYER_MARKER &&
       board[sq2] === PLAYER_MARKER &&
@@ -109,6 +109,7 @@ function advance() {
   if (playerWins === 5 || compWins === 5) return false;
   prompt(`When ready for next game hit 'c'.`);
   let response = validNextGame(rdln.question().toLowerCase());
+  return response;
 }
 
 function decideGrandChampion() {
@@ -156,11 +157,7 @@ while (true) {
       prompt("It's a tie!");
     }
 
-    if (decideWinner(board) === 'Player') {
-      playerWins += 1;
-    } else if (decideWinner(board) === 'Computer') {
-      compWins += 1;
-    }
+    scoreKeeper(board);
 
     displayBoard(board);
 
