@@ -1,11 +1,3 @@
-//1. Create playing board
-//2. Indicate X's and O's will be placed on board
-//3. Write function for how player will place marker on board
-//4. Write function for how computer will place marker on board
-//5. Create while loop that does not end until board is full (game is tied), or someone has won.
-//6. Ask player if they would like to play another round.
-//7. If not, end the program and say goodbye.
-
 const rdln = require('readline-sync');
 const INITIAL_MARKER = ' ';
 const PLAYER_MARKER = 'X';
@@ -20,7 +12,7 @@ function prompt(message) {
 function displayBoard(board) {
   console.clear();
 
-  prompt(`You have won ${playerWins} games. Computer has won ${compWins} games.`);
+  prompt(`You have won ${playerWins} game(s). Computer has won ${compWins} game(s).`);
   console.log('');
   console.log('     |     |');
   console.log(`  ${board[1]}  |  ${board[2]}  |  ${board[3]}`);
@@ -138,6 +130,7 @@ function validNextGame(response) {
 }
 
 while (true) {
+
   while (playerWins < 5 && compWins < 5) {
     let board = initializeBoard();
 
