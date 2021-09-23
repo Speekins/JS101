@@ -22,6 +22,15 @@ function emptySquares(board) {
   return Object.keys(board).filter(key => board[key] === INITIAL_MARKER);
 }
 
+function joinOr(array, delimiter = ', ', final = 'or') {
+  if (array.length === 0 || array.length === 1) return array.join();
+  if (array.length === 2) {
+    return `${array[0]} ${final} ${array[1]}`;
+  }
+  return array.slice(0, array.length - 1).join(delimiter) +
+    " " + final + " " + array.slice(array.length - 1);
+}
+
 function someoneWon(board) {
   return !!decideWinner(board);
 }
@@ -73,7 +82,7 @@ function displayBoard() {
 function playerChoosesSquare(board) {
   let square;
   while (true) {
-    prompt(`Select an open square: ${emptySquares(board).join(', ')}`);
+    prompt(`Select an open square: ${joinOr(emptySquares(board))}`);
     square = rdln.question().trim();
     if (emptySquares(board).includes(square)) break;
     prompt('Please select a valid square');
@@ -99,6 +108,8 @@ while (true) {
   computerChoosesSquare(board);
   if (someoneWon(board) || boardIsFull(board)) break;
 }
+
+displayBoard(board);
 
 if (someoneWon(board)) {
   prompt(`${decideWinner(board)} has won!`);
