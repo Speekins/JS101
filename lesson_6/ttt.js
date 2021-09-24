@@ -2,9 +2,12 @@ const rdln = require('readline-sync');
 const INITIAL_MARKER = ' ';
 const PLAYER_MARKER = 'X';
 const COMPUTER_MARKER = 'O';
+let playerMatchTotal = 0;
+let computerMatchTotal = 0;
+let totalGames = 0;
 // eslint-disable-next-line max-len
 const WINNING_COMBOS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]];
-let board = initializeBoard();
+let board;
 
 function prompt(message) {
   console.log(`=> ${message}`);
@@ -96,23 +99,77 @@ function computerChoosesSquare(board) {
   board[square] = COMPUTER_MARKER;
 }
 
-initializeBoard(board);
-displayBoard(board);
-
-while (true) {
-  displayBoard(board);
-
-  playerChoosesSquare(board);
-  if (someoneWon(board) || boardIsFull(board)) break;
-
-  computerChoosesSquare(board);
-  if (someoneWon(board) || boardIsFull(board)) break;
+function validContinue() {
+  let response;
+  while (true) {
+    prompt('To continue, hit "C".');
+    response = rdln.question().trim().toLowerCase();
+    if (response === 'c') break;
+    prompt(`Invalid response. To continue, hit 'C'.`)
+  }
 }
 
-displayBoard(board);
+function validReplay() {
+  let response;
+  while (true) {
+    prompt(`Would you like to play another round? If so, hit 'Y'. Otherwise, hit 'N'.`);
+    response = rdln.question().trim().toLowerCase();
+    if (response === 'y') {
+      resetTotals();
+      break;
+    }
+    if (response === 'n') {
+      prompt(`Thanks for playing! Bye!`);
+      break;
+    }
+    prompt(`That is an invalid response. Please type 'Y' to play again, or 'N' to quit.`)
+  }
+  return response;
+}
 
-if (someoneWon(board)) {
-  prompt(`${decideWinner(board)} has won!`);
-} else {
-  prompt(`It's a tie!`);
+function resetTotals() {
+  playerMatchTotal = 0;
+  computerMatchTotal = 0;
+  totalGames = 0;
+}
+
+
+while (true) {
+
+  board = initializeBoard();
+
+  while (true) {
+    displayBoard(board);
+
+    playerChoosesSquare(board);
+    if (someoneWon(board) || boardIsFull(board)) break;
+
+    computerChoosesSquare(board);
+    if (someoneWon(board) || boardIsFull(board)) break;
+  }
+
+  displayBoard(board);
+
+  if (someoneWon(board)) {
+    prompt(`${decideWinner(board)} has won!`);
+    totalGames += 1;
+  } else {
+    prompt(`It's a tie!`);
+  }
+
+  if (decideWinner(board) === 'Player') playerMatchTotal += 1;
+  if (decideWinner(board) === 'Computer') computerMatchTotal += 1;
+
+  if (totalGames > 0 && totalGames < 5) {
+    prompt(`You have won ${playerMatchTotal} game(s). Computer has won ${computerMatchTotal} game(s).`);
+    validContinue();
+  }
+
+  if (playerMatchTotal === 5) {
+    prompt(`Congratulations! You were first to 5 games won!`);
+    if (validReplay() === 'n') break;
+  } else if (computerMatchTotal === 5) {
+    prompt(`You've been outmatched! Computer was first to 5 games won. Better luck next time!`);
+    if (validReplay() === 'n') break;
+  }
 }
