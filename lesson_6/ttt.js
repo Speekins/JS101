@@ -94,9 +94,52 @@ function playerChoosesSquare(board) {
 }
 
 function computerChoosesSquare(board) {
-  let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
-  let square = emptySquares(board)[randomIndex];
+  let square;
+
+  for (let idx = 0; idx < WINNING_COMBOS.length; idx++) {
+    let line = WINNING_COMBOS[idx];
+    square = attackSquare(line, board);
+    if (square) break;
+  }
+
+  if (!square) {
+    for (let idx = 0; idx < WINNING_COMBOS.length; idx++) {
+      let line = WINNING_COMBOS[idx];
+      square = findAtRiskSquare(line, board);
+      if (square) break;
+    }
+  }
+
+  if (!square) {
+    let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
+    square = emptySquares(board)[randomIndex];
+  }
+
   board[square] = COMPUTER_MARKER;
+}
+
+function findAtRiskSquare(line, board) {
+  let markersInLine = line.map(square => board[square]);
+
+  if (markersInLine.filter(val => val === PLAYER_MARKER).length === 2) {
+    let openSpot = line.find(square => board[square] === INITIAL_MARKER);
+    if (openSpot !== undefined) {
+      return openSpot;
+    }
+  }
+  return null;
+}
+
+function attackSquare(line, board) {
+  let markersInLine = line.map(square => board[square]);
+
+  if (markersInLine.filter(val => val === COMPUTER_MARKER).length === 2) {
+    let openSpot = line.find(square => board[square] === INITIAL_MARKER);
+    if (openSpot !== undefined) {
+      return openSpot;
+    }
+  }
+  return null;
 }
 
 function validContinue() {
@@ -150,11 +193,12 @@ while (true) {
 
   displayBoard(board);
 
+  if (boardIsFull(board)) {
+    prompt(`It's a tie!`)
+  }
   if (someoneWon(board)) {
     prompt(`${decideWinner(board)} has won!`);
     totalGames += 1;
-  } else {
-    prompt(`It's a tie!`);
   }
 
   if (decideWinner(board) === 'Player') playerMatchTotal += 1;
