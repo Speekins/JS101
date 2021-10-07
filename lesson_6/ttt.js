@@ -34,6 +34,12 @@ function joinOr(array, delimiter = ', ', final = 'or') {
     " " + final + " " + array.slice(array.length - 1);
 }
 
+function randomizeFirstToPlay() {
+  let number = Math.round(Math.random())
+
+  return number === 1;
+}
+
 function someoneWon(board) {
   return !!decideWinner(board);
 }
@@ -111,6 +117,12 @@ function computerChoosesSquare(board) {
   }
 
   if (!square) {
+    if (board[5] === INITIAL_MARKER) {
+      square = 5;
+    }
+  }
+
+  if (!square) {
     let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
     square = emptySquares(board)[randomIndex];
   }
@@ -181,14 +193,31 @@ while (true) {
 
   board = initializeBoard();
 
-  while (true) {
-    displayBoard(board);
+  randomizeFirstToPlay();
 
-    playerChoosesSquare(board);
-    if (someoneWon(board) || boardIsFull(board)) break;
+  if (randomizeFirstToPlay()) {
+    while (true) {
+      displayBoard(board);
 
-    computerChoosesSquare(board);
-    if (someoneWon(board) || boardIsFull(board)) break;
+      playerChoosesSquare(board);
+      if (someoneWon(board) || boardIsFull(board)) break;
+
+      computerChoosesSquare(board);
+      if (someoneWon(board) || boardIsFull(board)) break;
+    }
+  }
+
+  if (!randomizeFirstToPlay()) {
+    while (true) {
+
+      computerChoosesSquare(board);
+      if (someoneWon(board) || boardIsFull(board)) break;
+
+      displayBoard(board);
+
+      playerChoosesSquare(board);
+      if (someoneWon(board) || boardIsFull(board)) break;
+    }
   }
 
   displayBoard(board);
@@ -204,7 +233,7 @@ while (true) {
   if (decideWinner(board) === 'Player') playerMatchTotal += 1;
   if (decideWinner(board) === 'Computer') computerMatchTotal += 1;
 
-  if (totalGames > 0 && totalGames < 5) {
+  if (totalGames < 5) {
     prompt(`You have won ${playerMatchTotal} game(s). Computer has won ${computerMatchTotal} game(s).`);
     validContinue();
   }
