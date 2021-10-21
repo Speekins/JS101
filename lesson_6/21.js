@@ -5,14 +5,21 @@
 //5. Dealer turn: hit or stay. (Repeat until total >= 17)
 //6. If dealer busts, player wins.
 //7. Compare cards and declare winner.
+const rdln = require('readline-sync');
 let deck = [];
 let playerCards = [];
 let suits = ['♠', '♣', '♥', '♦'];
-let cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+let cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10'];
+let honors = ['J', 'Q', 'K', 'A'];
+
+function prompt(message) {
+  console.log(`=>${message}`);
+}
 
 function initializeDeck(deck) {
   for (let idx = 0; idx < suits.length; idx++) {
     cards.forEach(card => deck.push(card + suits[idx]));
+    honors.forEach(honor => deck.push(honor + suits[idx]));
   }
   return deck;
 }
@@ -27,6 +34,17 @@ function shuffle(array = []) {
   deck = array;
 }
 
+function validResponse() {
+  let response;
+  while (true) {
+    prompt(`Would you like to hit? If so, press 'Y'. If not, press 'N'.`);
+    if (rdln.question() === 'Y'.trim().toUpperCase() || rdln.question() === 'N'.trim().toUpperCase()) break;
+    prompt(`That is not a valid response. Please press 'Y' or 'N'.`);
+    response = rdln.question();
+  }
+  return response;
+}
+
 shuffle();
 
 console.log(deck);
@@ -38,3 +56,25 @@ function dealTwo(deck, playerCards) {
 }
 
 dealTwo(deck, playerCards);
+
+function calculateTotal(hand) {
+  let convertedNums = [];
+  hand.map(card => card[0])
+    .forEach(num => {
+      if (honors.includes(num) && num !== 'A') {
+        convertedNums.push(10);
+      } else if (num === 'A') {
+        convertedNums.push(11);
+      } else { convertedNums.push(Number(num)) }
+    });
+  return convertedNums.reduce((accumulator, number) => accumulator + number);
+};
+
+prompt(`Your cards are ${playerCards} and your total is ${calculateTotal(playerCards)}`);
+validResponse();
+
+function calculateAces(total) {
+  if (total > 21 && playerCards.map(card => card[0]).includes('A')) {
+    total - 10;
+  }
+}
