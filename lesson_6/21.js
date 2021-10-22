@@ -7,7 +7,8 @@
 //7. Compare cards and declare winner.
 const rdln = require('readline-sync');
 let deck = [];
-let playerCards = [];
+let playerCards = ['AD', 'AH'];
+let playerCardValues = [];
 let suits = ['♠', '♣', '♥', '♦'];
 let cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10'];
 let honors = ['J', 'Q', 'K', 'A'];
@@ -47,15 +48,15 @@ function validResponse() {
 
 shuffle();
 
-console.log(deck);
-
 function dealTwo(deck, playerCards) {
   for (let idx = 0; idx < 2; idx++) {
     playerCards.push(deck.splice(0, 1).toString());
   }
 }
 
-dealTwo(deck, playerCards);
+//dealTwo(deck, playerCards);
+
+//function calculatePlayerCardValues();
 
 function calculateTotal(hand) {
   let convertedNums = [];
@@ -65,16 +66,23 @@ function calculateTotal(hand) {
         convertedNums.push(10);
       } else if (num === 'A') {
         convertedNums.push(11);
-      } else { convertedNums.push(Number(num)) }
+      } else { convertedNums.push(parseInt(num)) }
     });
-  return convertedNums.reduce((accumulator, number) => accumulator + number);
+  let grandTotal = convertedNums.reduce((accumulator, number) => accumulator + number);
+
+  return calculateAces(grandTotal);
 };
 
-prompt(`Your cards are ${playerCards} and your total is ${calculateTotal(playerCards)}`);
-validResponse();
-
-function calculateAces(total) {
-  if (total > 21 && playerCards.map(card => card[0]).includes('A')) {
-    total - 10;
-  }
+function calculateAces(grandTotal) {
+  if (grandTotal > 21 && playerCards.map(card => card[0]).includes('A')) {
+    playerCards = playerCards.map(card => {
+      if (card[0] === 'A') {
+        return card = '1'
+      } else { return card }
+    })
+    calculateTotal(playerCards);
+  };
+  return grandTotal;
 }
+console.log(calculateTotal(playerCards));
+prompt(`Your cards are ${playerCards}, your card values are ${playerCardValues}, and your total is ${calculateTotal(playerCards)}`);
