@@ -14,8 +14,6 @@ let board;
 let currentPlayer;
 let playerMatchTotal = 0;
 let computerMatchTotal = 0;
-let totalGames = 0;
-
 
 function alternatePlayer(currentPlayer) {
   if (currentPlayer === 'player') {
@@ -259,14 +257,14 @@ while (true) {
   }
   if (someoneWon(board)) {
     prompt(`${decideWinner(board)} has won!`);
-    totalGames += 1;
   }
 
   if (decideWinner(board) === 'Player') playerMatchTotal += 1;
   if (decideWinner(board) === 'Computer') computerMatchTotal += 1;
 
-  if (totalGames < MAX_WINS) {
-    prompt(`You have won ${playerMatchTotal} game(s). Computer has won ${computerMatchTotal} game(s).`);
+  prompt(`You have won ${playerMatchTotal} game(s). Computer has won ${computerMatchTotal} game(s).`);
+
+  if (playerMatchTotal < MAX_WINS && computerMatchTotal < MAX_WINS) {
     validContinue('In order to continue, type "C"');
   }
 
@@ -274,7 +272,7 @@ while (true) {
     prompt(`Congratulations! You were first to win 5 games!`);
     if (validReplay() === 'n') break;
   } else if (computerMatchTotal === MAX_WINS) {
-    prompt(`You've been outmatched! Computer was first to 5 games won. Better luck next time!`);
+    prompt(`You've been outmatched! Computer was first to win 5 games. Better luck next time!`);
     if (validReplay() === 'n') break;
   }
 }
