@@ -7,8 +7,12 @@
 //7. Compare cards and declare winner.
 const rdln = require('readline-sync');
 let deck = [];
-let playerCards = ['AD', 'AH'];
+let playerCards = [];
 let playerCardValues = [];
+let playerHandTotal;
+let dealerCards = [];
+let dealerCardValues = [];
+let dealerHandTotal;
 let suits = ['♠', '♣', '♥', '♦'];
 let cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10'];
 let honors = ['J', 'Q', 'K', 'A'];
@@ -39,50 +43,85 @@ function validResponse() {
   let response;
   while (true) {
     prompt(`Would you like to hit? If so, press 'Y'. If not, press 'N'.`);
-    if (rdln.question() === 'Y'.trim().toUpperCase() || rdln.question() === 'N'.trim().toUpperCase()) break;
-    prompt(`That is not a valid response. Please press 'Y' or 'N'.`);
-    response = rdln.question();
+    response = rdln.question().trim().toUpperCase();
+    if (response === 'Y' || response === 'N') break;
+    prompt(`That is not a valid response.`);
   }
   return response;
 }
 
 shuffle();
 
-function dealTwo(deck, playerCards) {
+function dealTwo(deck, playerCards, dealerCards) {
   for (let idx = 0; idx < 2; idx++) {
     playerCards.push(deck.splice(0, 1).toString());
+    dealerCards.push(deck.splice(0, 1).toString());
   }
 }
+console.log(deck);
+dealTwo(deck, playerCards, dealerCards);
 
-//dealTwo(deck, playerCards);
-
-//function calculatePlayerCardValues();
-
-function calculateTotal(hand) {
-  let convertedNums = [];
-  hand.map(card => card[0])
-    .forEach(num => {
-      if (honors.includes(num) && num !== 'A') {
-        convertedNums.push(10);
-      } else if (num === 'A') {
-        convertedNums.push(11);
-      } else { convertedNums.push(parseInt(num)) }
+function calculatePlayerCardValues(hand) {
+  playerCardValues = hand
+    .map(hand => {
+      if (honors.includes(hand[0]) && hand[0] !== 'A') {
+        return 10;
+      } else if (hand[0] === 'A') {
+        return 11;
+      } else { return parseFloat(hand) }
     });
-  let grandTotal = convertedNums.reduce((accumulator, number) => accumulator + number);
+}
+
+
+function calculateTotal(values) {
+  let grandTotal = values.reduce((accumulator, number) => accumulator + number);
 
   return calculateAces(grandTotal);
-};
+}
 
 function calculateAces(grandTotal) {
   if (grandTotal > 21 && playerCards.map(card => card[0]).includes('A')) {
-    playerCards = playerCards.map(card => {
-      if (card[0] === 'A') {
-        return card = '1'
-      } else { return card }
-    })
-    calculateTotal(playerCards);
-  };
+    playerCardValues = playerCardValues.map(num => {
+      if (num === 11) {
+        return 1;
+      } else { return num }
+    });
+    calculateTotal(playerCardValues);
+  }
   return grandTotal;
 }
-console.log(calculateTotal(playerCards));
-prompt(`Your cards are ${playerCards}, your card values are ${playerCardValues}, and your total is ${calculateTotal(playerCards)}`);
+
+function dealOne(deck, cards) {
+  cards.push(deck.shift());
+}
+
+calculatePlayerCardValues(playerCards);
+calculateTotal(playerCardValues);
+
+prompt(`Your cards are ${playerCards} your card values are ${playerCardValues} and your total is ${calculateTotal(playerCardValues)}`);
+prompt(`The dealer's visible card is ${dealerCards[1]}.`);
+
+while (true) {
+
+  if (validResponse() === 'Y') {
+    dealOne(deck, playerCards);
+    dealOne(deck, dealerCards);
+    calculatePlayerCardValues(playerCards);
+    calculatePlayerCardValues(dealerCards);
+  } else { break }
+
+  prompt(`Your cards are ${playerCards}. Your card values are ${playerCardValues}.
+ Your total is ${calculateTotal(playerCardValues)}`);
+}
+
+while (calculateTotal(dealerCardValues) < 17) {
+  dealOne(deck, dealerCards);
+  calculatePlayerCardValues(dealerCards);
+  calculateTotal(dealerCards);
+}
+
+prompt(`Your cards are ${playerCards} and your total adds up to ${calculatePlayerCardValues(playerCardValues)}`);
+prompt(`Dealer's cards are ${dealerCards} totaling up to ${calculatePlayerCardValues(dealerCards)}`);
+
+//determineWinner(playerHandTotal, dealerHandTotal){}
+//announceWinner(playerHandTotal, dealerHandTotal){}
