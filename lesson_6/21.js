@@ -7,12 +7,12 @@
 //7. Compare cards and declare winner.
 const rdln = require('readline-sync');
 let deck = [];
-let playerCards = [];
+let playerCards = ['A'];
 let playerCardValues = [];
-let playerHandTotal;
+let playerHandTotal = 0;
 let dealerCards = [];
 let dealerCardValues = [];
-let dealerHandTotal;
+let dealerHandTotal = 0;
 let suits = ['♠', '♣', '♥', '♦'];
 let cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10'];
 let honors = ['J', 'Q', 'K', 'A'];
@@ -28,8 +28,6 @@ function initializeDeck(deck) {
   }
   return deck;
 }
-
-initializeDeck(deck);
 
 function shuffle(array = []) {
   for (let index = deck.length - 1; index >= 0; index--) {
@@ -50,78 +48,90 @@ function validResponse() {
   return response;
 }
 
-shuffle();
-
 function dealTwo(deck, playerCards, dealerCards) {
   for (let idx = 0; idx < 2; idx++) {
     playerCards.push(deck.splice(0, 1).toString());
     dealerCards.push(deck.splice(0, 1).toString());
   }
 }
-console.log(deck);
-dealTwo(deck, playerCards, dealerCards);
 
-function calculatePlayerCardValues(hand) {
-  playerCardValues = hand
-    .map(hand => {
-      if (honors.includes(hand[0]) && hand[0] !== 'A') {
-        return 10;
-      } else if (hand[0] === 'A') {
-        return 11;
-      } else { return parseFloat(hand) }
-    });
+function calculateCardValues(hand, cardValues) {
+  let valueArray = hand.map(card => {
+    if (honors.includes(card[0]) && card[0] !== 'A') {
+      return 10;
+    } else if (card[0] === 'A') {
+      return 11;
+    } else { return parseFloat(card) }
+  });
+  if (cardValues === playerCardValues) playerCardValues = valueArray;
+  if (cardValues === dealerCardValues) dealerCardValues = valueArray;
+  return undefined;
 }
 
+function calculateHandTotal(values) {
+  let total = values.reduce((accumulator, number) => accumulator + number);
 
-function calculateTotal(values) {
-  let grandTotal = values.reduce((accumulator, number) => accumulator + number);
+  if (values === playerCardValues) {
+    playerHandTotal = calculateAces(values, total);
+  } else { dealerHandTotal = calculateAces(values, total) }
 
-  return calculateAces(grandTotal);
+  return undefined;
 }
 
-function calculateAces(grandTotal) {
-  if (grandTotal > 21 && playerCards.map(card => card[0]).includes('A')) {
-    playerCardValues = playerCardValues.map(num => {
+function calculateAces(values, total) {
+  if (total > 21) {
+    let newValues = values.map(num => {
       if (num === 11) {
         return 1;
       } else { return num }
-    });
-    calculateTotal(playerCardValues);
-  }
-  return grandTotal;
+    })
+    return calculateHandTotal(newValues);
+  };
+  return total;
 }
 
-function dealOne(deck, cards) {
-  cards.push(deck.shift());
+function dealOne(deck, playerCards, dealerCards) {
+  playerCards.push(deck.shift());
+  dealerCards.push(deck.shift());
 }
 
-calculatePlayerCardValues(playerCards);
-calculateTotal(playerCardValues);
+function dealOneToDealer(deck, dealerCards) {
+  dealerCards.push(deck.shift());
+}
 
-prompt(`Your cards are ${playerCards} your card values are ${playerCardValues} and your total is ${calculateTotal(playerCardValues)}`);
-prompt(`The dealer's visible card is ${dealerCards[1]}.`);
+initializeDeck(deck);
+shuffle();
+
+dealTwo(deck, playerCards, dealerCards);
+console.log(playerCards);
+console.log(dealerCards);
+calculateCardValues(dealerCards, dealerCardValues);
+calculateCardValues(playerCards, playerCardValues);
+calculateHandTotal(dealerCardValues);
+calculateHandTotal(playerCardValues);
+
+prompt(`Your cards are ${playerCards}, card values are ${playerCardValues} and your total is ${playerHandTotal}`);
+prompt(`The dealer's visible card is ${dealerCards[0]}.`);
 
 while (true) {
 
   if (validResponse() === 'Y') {
-    dealOne(deck, playerCards);
-    dealOne(deck, dealerCards);
-    calculatePlayerCardValues(playerCards);
-    calculatePlayerCardValues(dealerCards);
+    dealOne(deck, playerCards, dealerCards);
+    calculateCardValues(playerCards, playerCardValues);
+    calculateHandTotal(playerCardValues, playerCards, player);
   } else { break }
 
-  prompt(`Your cards are ${playerCards}. Your card values are ${playerCardValues}.
- Your total is ${calculateTotal(playerCardValues)}`);
+  prompt(`Your cards are ${playerCards}, card values are ${playerCardValues} and your total is ${playerHandTotal}`);
 }
 
-while (calculateTotal(dealerCardValues) < 17) {
-  dealOne(deck, dealerCards);
-  calculatePlayerCardValues(dealerCards);
-  calculateTotal(dealerCards);
+while (dealerHandTotal < 17) {
+  dealOneToDealer(deck, dealerCards);
+  calculateCardValues(dealerCards, dealerCardValues);
+  calculateHandTotal(dealerCardValues, dealerCards, dealer);
 }
 
-prompt(`Your cards are ${playerCards} and your total adds up to ${calculatePlayerCardValues(playerCardValues)}`);
-prompt(`Dealer's cards are ${dealerCards} totaling up to ${calculatePlayerCardValues(dealerCards)}`);
+prompt(`Your cards are ${playerCards} and your total adds up to ${playerHandTotal}`);
+prompt(`Dealer's cards are ${dealerCards} totaling up to ${dealerHandTotal}`);
 
 //determineWinner(playerHandTotal, dealerHandTotal){}
 //announceWinner(playerHandTotal, dealerHandTotal){}
