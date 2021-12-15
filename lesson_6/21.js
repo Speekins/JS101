@@ -72,10 +72,10 @@ function calculateHandTotal(values) {
   let total = values.reduce((accumulator, number) => accumulator + number);
 
   if (values === playerCardValues) {
-    playerHandTotal = calculateAces(values, total);
-  } else { dealerHandTotal = calculateAces(values, total) }
+    playerHandTotal = calculateAces(playerCardValues, total);
+  } else { dealerHandTotal = calculateAces(dealerCardValues, total) }
 
-  return undefined;
+  return total;
 }
 
 function calculateAces(values, total) {
@@ -85,7 +85,13 @@ function calculateAces(values, total) {
         return 1;
       } else { return num }
     })
-    return calculateHandTotal(newValues);
+    if (values === playerCardValues) {
+      playerCardValues = newValues;
+      return calculateHandTotal(playerCardValues);
+    } else {
+      dealerCardValues = newValues;
+      return calculateHandTotal(dealerCardValues);
+    }
   };
   return total;
 }
