@@ -7,7 +7,7 @@
 //7. Compare cards and declare winner.
 const rdln = require('readline-sync');
 let deck = [];
-let playerCards = ['A'];
+let playerCards = [];
 let playerCardValues = [];
 let playerHandTotal = 0;
 let dealerCards = [];
@@ -37,10 +37,10 @@ function shuffle(array = []) {
   deck = array;
 }
 
-function validResponse() {
+function validResponse(statement) {
   let response;
   while (true) {
-    prompt(`Would you like to hit? If so, press 'Y'. If not, press 'N'.`);
+    prompt(statement);
     response = rdln.question().trim().toUpperCase();
     if (response === 'Y' || response === 'N') break;
     prompt(`That is not a valid response.`);
@@ -55,7 +55,7 @@ function dealTwo(deck, playerCards, dealerCards) {
   }
 }
 
-function calculateCardValues(hand, cardValues) {
+function calculateCardValues(hand) {
   let valueArray = hand.map(card => {
     if (honors.includes(card[0]) && card[0] !== 'A') {
       return 10;
@@ -63,8 +63,8 @@ function calculateCardValues(hand, cardValues) {
       return 11;
     } else { return parseFloat(card) }
   });
-  if (cardValues === playerCardValues) playerCardValues = valueArray;
-  if (cardValues === dealerCardValues) dealerCardValues = valueArray;
+  if (hand === playerCards) playerCardValues = valueArray;
+  if (hand === dealerCards) dealerCardValues = valueArray;
   return undefined;
 }
 
@@ -72,14 +72,14 @@ function calculateHandTotal(values) {
   let total = values.reduce((accumulator, number) => accumulator + number);
 
   if (values === playerCardValues) {
-    playerHandTotal = calculateAces(playerCardValues, total);
-  } else { dealerHandTotal = calculateAces(dealerCardValues, total) }
+    playerHandTotal = calculateAces(values, total);
+  } else { dealerHandTotal = calculateAces(values, total) }
 
   return total;
 }
 
 function calculateAces(values, total) {
-  if (total > 21) {
+  if (total > 21 && values.includes(11)) {
     let newValues = values.map(num => {
       if (num === 11) {
         return 1;
@@ -96,44 +96,44 @@ function calculateAces(values, total) {
   return total;
 }
 
-function dealOne(deck, playerCards, dealerCards) {
-  playerCards.push(deck.shift());
-  dealerCards.push(deck.shift());
-}
-
-function dealOneToDealer(deck, dealerCards) {
-  dealerCards.push(deck.shift());
+function dealOne(deck, cards) {
+  cards.push(deck.shift());;
 }
 
 initializeDeck(deck);
 shuffle();
 
 dealTwo(deck, playerCards, dealerCards);
-console.log(playerCards);
-console.log(dealerCards);
-calculateCardValues(dealerCards, dealerCardValues);
-calculateCardValues(playerCards, playerCardValues);
+calculateCardValues(dealerCards);
+calculateCardValues(playerCards);
 calculateHandTotal(dealerCardValues);
 calculateHandTotal(playerCardValues);
 
 prompt(`Your cards are ${playerCards}, card values are ${playerCardValues} and your total is ${playerHandTotal}`);
 prompt(`The dealer's visible card is ${dealerCards[0]}.`);
 
-while (true) {
+while (true && playerHandTotal <= 21) {
 
-  if (validResponse() === 'Y') {
-    dealOne(deck, playerCards, dealerCards);
-    calculateCardValues(playerCards, playerCardValues);
-    calculateHandTotal(playerCardValues, playerCards, player);
+  if (validResponse(`Would you like to hit? If so, press 'Y'. If not, press 'N'.`) === 'Y') {
+    console.clear();
+    dealOne(deck, playerCards);
+    calculateCardValues(dealerCards);
+    calculateCardValues(playerCards);
+    calculateHandTotal(dealerCardValues);
+    calculateHandTotal(playerCardValues);
   } else { break }
 
   prompt(`Your cards are ${playerCards}, card values are ${playerCardValues} and your total is ${playerHandTotal}`);
 }
 
-while (dealerHandTotal < 17) {
-  dealOneToDealer(deck, dealerCards);
-  calculateCardValues(dealerCards, dealerCardValues);
-  calculateHandTotal(dealerCardValues, dealerCards, dealer);
+while (dealerHandTotal < 17 && dealerHandTotal <= 21) {
+  if (dealerHandTotal > 17) {
+    console.clear();
+    break;
+  }
+  dealOne(deck, dealerCards);
+  calculateCardValues(dealerCards);
+  calculateHandTotal(dealerCardValues);
 }
 
 prompt(`Your cards are ${playerCards} and your total adds up to ${playerHandTotal}`);
