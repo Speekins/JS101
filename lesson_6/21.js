@@ -16,6 +16,7 @@ let dealerHandTotal = 0;
 let suits = ['♠', '♣', '♥', '♦'];
 let cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10'];
 let honors = ['J', 'Q', 'K', 'A'];
+let welcomeMessage = '***Welcome to the Game of 21***';
 
 function prompt(message) {
   console.log(`=>${message}`);
@@ -38,6 +39,28 @@ function shuffle(array = []) {
 }
 
 function validResponse(statement) {
+  let response;
+  while (true) {
+    prompt(statement);
+    response = rdln.question().trim().toUpperCase();
+    if (response === 'Y' || response === 'N') break;
+    prompt(`That is not a valid response.`);
+  }
+  return response;
+}
+
+function validContinue(statement) {
+  let response;
+  while (true) {
+    prompt(statement);
+    response = rdln.question().trim().toUpperCase();
+    if (response === 'C') break;
+    prompt(`That is not a valid response.`);
+  }
+  return response;
+}
+
+function validReplay(statement) {
   let response;
   while (true) {
     prompt(statement);
@@ -78,6 +101,16 @@ function calculateHandTotal(values) {
   return total;
 }
 
+function clearTotalsForReplay() {
+  deck = [];
+  playerCards = [];
+  playerCardValues = [];
+  playerHandTotal = 0;
+  dealerCards = [];
+  dealerCardValues = [];
+  dealerHandTotal = 0;
+}
+
 function calculateAces(values, total) {
   if (total > 21 && values.includes(11)) {
     let newValues = values.map(num => {
@@ -97,47 +130,63 @@ function calculateAces(values, total) {
 }
 
 function dealOne(deck, cards) {
-  cards.push(deck.shift());;
+  cards.push(deck.shift());
 }
 
-initializeDeck(deck);
-shuffle();
-
-dealTwo(deck, playerCards, dealerCards);
-calculateCardValues(dealerCards);
-calculateCardValues(playerCards);
-calculateHandTotal(dealerCardValues);
-calculateHandTotal(playerCardValues);
-
-prompt(`Your cards are ${playerCards}, card values are ${playerCardValues} and your total is ${playerHandTotal}`);
-prompt(`The dealer's visible card is ${dealerCards[0]}.`);
-
-while (true && playerHandTotal <= 21) {
-
-  if (validResponse(`Would you like to hit? If so, press 'Y'. If not, press 'N'.`) === 'Y') {
-    console.clear();
-    dealOne(deck, playerCards);
-    calculateCardValues(dealerCards);
-    calculateCardValues(playerCards);
-    calculateHandTotal(dealerCardValues);
-    calculateHandTotal(playerCardValues);
-  } else { break }
-
-  prompt(`Your cards are ${playerCards}, card values are ${playerCardValues} and your total is ${playerHandTotal}`);
+function announceWinner(playerHandTotal, dealerHandTotal) {
+  console.clear();
+  if (dealerHandTotal > 21) {
+    return prompt(`Dealer busted! You win!`)
+  }
+  if (playerHandTotal > dealerHandTotal) {
+    return prompt(`You win! Your cards ${playerCards} total ${playerHandTotal}. Dealer's cards ${dealerCards} total ${dealerHandTotal}.`)
+  }
+  if (dealerHandTotal > playerHandTotal) {
+    return prompt(`The dealer won with ${dealerCards} totaling ${dealerHandTotal}. Your cards ${playerCards} total ${playerHandTotal}.`)
+  }
 }
 
-while (dealerHandTotal < 17 && dealerHandTotal <= 21) {
-  if (dealerHandTotal > 17) {
-    console.clear();
+do {
+  console.clear();
+  prompt(`***Welcome to THE GAME OF 21***\n\nThe player (you or dealer) who comes closest to 21, without exceeding 21, wins`);
+  validContinue(`If you're ready to continue, type 'C'.`);
+
+  initializeDeck(deck);
+  shuffle();
+
+  dealTwo(deck, playerCards, dealerCards);
+  calculateCardValues(dealerCards);
+  calculateCardValues(playerCards);
+  calculateHandTotal(dealerCardValues);
+  calculateHandTotal(playerCardValues);
+
+  console.clear();
+  prompt(`Your starting hand is ${playerCards} totaling ${playerHandTotal}. Dealer's visible card is ${dealerCards[0]}.`);
+
+  do {
+    if (validResponse(`Would you like to hit? If so, press 'Y'. If not, press 'N'.`) === 'Y') {
+      console.clear();
+      dealOne(deck, playerCards);
+      calculateCardValues(playerCards);
+      calculateHandTotal(playerCardValues);
+      prompt(`Playerhand: ${playerCards} Player total: ${playerHandTotal} Dealer's hand: ${dealerCards[0]}.`);
+    } else { break }
+  } while (true && playerHandTotal <= 21);
+
+  if (playerHandTotal > 21) {
+    prompt('You busted! Game Over :(');
     break;
   }
-  dealOne(deck, dealerCards);
-  calculateCardValues(dealerCards);
-  calculateHandTotal(dealerCardValues);
-}
 
-prompt(`Your cards are ${playerCards} and your total adds up to ${playerHandTotal}`);
-prompt(`Dealer's cards are ${dealerCards} totaling up to ${dealerHandTotal}`);
+  while (dealerHandTotal < 17 && !(dealerHandTotal > 21)) {
+    if (dealerHandTotal > 17) break;
+    dealOne(deck, dealerCards);
+    calculateCardValues(dealerCards);
+    calculateHandTotal(dealerCardValues);
+  }
+  announceWinner(playerHandTotal, dealerHandTotal);
+  clearTotalsForReplay();
+} while (validReplay(`Would you like to play again? Type 'Y' for 'Yes' or 'N' for 'No'.`) === 'Y');
 
-//determineWinner(playerHandTotal, dealerHandTotal){}
-//announceWinner(playerHandTotal, dealerHandTotal){}
+console.clear()
+prompt('Thanks for playing THE GAME OF 21');
