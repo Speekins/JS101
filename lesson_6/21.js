@@ -38,21 +38,21 @@ function shuffle(array = []) {
   deck = array;
 }
 
-function validResponse(statement) {
+function validHitOrStay() {
   let response;
   while (true) {
-    prompt(statement);
+    prompt(`Would you like to hit? If so, press 'H'. If you would like to stay, press 'S'.`);
     response = rdln.question().trim().toUpperCase();
-    if (response === 'Y' || response === 'N') break;
+    if (response === 'H' || response === 'S') break;
     prompt(`That is not a valid response.`);
   }
   return response;
 }
 
-function validContinue(statement) {
+function validContinue() {
   let response;
   while (true) {
-    prompt(statement);
+    prompt(`If you're ready to continue, type 'C'.`);
     response = rdln.question().trim().toUpperCase();
     if (response === 'C') break;
     prompt(`That is not a valid response.`);
@@ -60,10 +60,10 @@ function validContinue(statement) {
   return response;
 }
 
-function validReplay(statement) {
+function validReplay() {
   let response;
   while (true) {
-    prompt(statement);
+    prompt(`Would you like to play again? Type 'Y' for 'Yes' or 'N' for 'No'.`);
     response = rdln.question().trim().toUpperCase();
     if (response === 'Y' || response === 'N') break;
     prompt(`That is not a valid response.`);
@@ -118,6 +118,7 @@ function calculateAces(values, total) {
         return 1;
       } else { return num }
     })
+
     if (values === playerCardValues) {
       playerCardValues = newValues;
       return calculateHandTotal(playerCardValues);
@@ -126,6 +127,7 @@ function calculateAces(values, total) {
       return calculateHandTotal(dealerCardValues);
     }
   };
+
   return total;
 }
 
@@ -133,23 +135,46 @@ function dealOne(deck, cards) {
   cards.push(deck.shift());
 }
 
-function announceWinner(playerHandTotal, dealerHandTotal) {
-  console.clear();
+function determineWinner(playerHandTotal, dealerHandTotal) {
+  let win;
+  let loss;
+  let bust;
+  let tie;
+
   if (dealerHandTotal > 21) {
-    return prompt(`Dealer busted! You win!`)
+    return announceWinner('bust');
+  }
+  if (dealerHandTotal === playerHandTotal) {
+    return announceWinner('tie');
   }
   if (playerHandTotal > dealerHandTotal) {
-    return prompt(`You win! Your cards ${playerCards} total ${playerHandTotal}. Dealer's cards ${dealerCards} total ${dealerHandTotal}.`)
+    return announceWinner('win');
   }
   if (dealerHandTotal > playerHandTotal) {
-    return prompt(`The dealer won with ${dealerCards} totaling ${dealerHandTotal}. Your cards ${playerCards} total ${playerHandTotal}.`)
+    return announceWinner('loss');
+  }
+}
+
+function announceWinner(result) {
+  switch (result) {
+    case 'bust':
+      return prompt(`Dealer busted! You win!`);
+    case 'tie':
+      return prompt(`Wow! It's a tie! Your cards ${playerCards} total ${playerHandTotal}. 
+      Dealer's cards ${dealerCards} total ${dealerHandTotal}.`);
+    case 'win':
+      return prompt(`You win! Your cards ${playerCards} total ${playerHandTotal}. 
+      Dealer's cards ${dealerCards} total ${dealerHandTotal}.`);
+    case 'loss':
+      return prompt(`The dealer won with ${dealerCards} totaling ${dealerHandTotal}. 
+      Your cards ${playerCards} total ${playerHandTotal}.`)
   }
 }
 
 do {
   console.clear();
-  prompt(`***Welcome to THE GAME OF 21***\n\nThe player (you or dealer) who comes closest to 21, without exceeding 21, wins`);
-  validContinue(`If you're ready to continue, type 'C'.`);
+  prompt(`***Welcome to THE GAME OF 21***\n\nThe player (you or dealer) who comes closest to 21, without exceeding 21, wins.`);
+  validContinue();
 
   initializeDeck(deck);
   shuffle();
@@ -164,7 +189,7 @@ do {
   prompt(`Your starting hand is ${playerCards} totaling ${playerHandTotal}. Dealer's visible card is ${dealerCards[0]}.`);
 
   do {
-    if (validResponse(`Would you like to hit? If so, press 'Y'. If not, press 'N'.`) === 'Y') {
+    if (validHitOrStay() === 'H') {
       console.clear();
       dealOne(deck, playerCards);
       calculateCardValues(playerCards);
@@ -175,7 +200,10 @@ do {
 
   if (playerHandTotal > 21) {
     prompt('You busted! Game Over :(');
-    break;
+    if (validReplay() === 'N') break;
+  } else {
+    console.clear();
+    prompt(`You chose to stay! Nice.`);
   }
 
   while (dealerHandTotal < 17 && !(dealerHandTotal > 21)) {
@@ -184,9 +212,11 @@ do {
     calculateCardValues(dealerCards);
     calculateHandTotal(dealerCardValues);
   }
-  announceWinner(playerHandTotal, dealerHandTotal);
+
+  determineWinner(playerHandTotal, dealerHandTotal);
+
   clearTotalsForReplay();
-} while (validReplay(`Would you like to play again? Type 'Y' for 'Yes' or 'N' for 'No'.`) === 'Y');
+} while (validReplay() === 'Y');
 
 console.clear()
 prompt('Thanks for playing THE GAME OF 21');
