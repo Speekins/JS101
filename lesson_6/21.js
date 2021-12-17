@@ -111,7 +111,7 @@ function calculateAces(values, total) {
       if (num === 11) {
         return 1;
       } else { return num }
-    })
+    });
 
     if (values === playerCardValues) {
       playerCardValues = newValues;
@@ -120,7 +120,7 @@ function calculateAces(values, total) {
       dealerCardValues = newValues;
       return calculateHandTotal(dealerCardValues);
     }
-  };
+  }
 
   return total;
 }
@@ -130,11 +130,6 @@ function dealOne(deck, cards) {
 }
 
 function determineWinner(playerHandTotal, dealerHandTotal) {
-  let win;
-  let loss;
-  let bust;
-  let tie;
-
   if (dealerHandTotal > 21) {
     return announceWinner('bust');
   }
@@ -147,6 +142,8 @@ function determineWinner(playerHandTotal, dealerHandTotal) {
   if (dealerHandTotal > playerHandTotal) {
     return announceWinner('loss');
   }
+
+  return undefined;
 }
 
 function announceWinner(result) {
@@ -161,8 +158,10 @@ function announceWinner(result) {
       Dealer's cards ${dealerCards} total ${dealerHandTotal}.`);
     case 'loss':
       return prompt(`The dealer won with ${dealerCards} totaling ${dealerHandTotal}. 
-      Your cards ${playerCards} total ${playerHandTotal}.`)
+      Your cards ${playerCards} total ${playerHandTotal}.`);
   }
+
+  return undefined;
 }
 
 do {
@@ -212,5 +211,5 @@ do {
   clearTotalsForReplay();
 } while (validReplay() === 'Y');
 
-console.clear()
+console.clear();
 prompt('Thanks for playing THE GAME OF 21');
