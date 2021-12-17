@@ -1,22 +1,14 @@
-//1. Initialize the card deck.
-//2. Deal cards to player and dealer.
-//3. Player turn: hit or stay. (Repeat this step until bust or stay)
-//4. If player busts, dealer wins.
-//5. Dealer turn: hit or stay. (Repeat until total >= 17)
-//6. If dealer busts, player wins.
-//7. Compare cards and declare winner.
 const rdln = require('readline-sync');
 let deck = [];
 let playerCards = [];
 let playerCardValues = [];
-let playerHandTotal = 0;
+let playerHandTotal;
 let dealerCards = [];
 let dealerCardValues = [];
-let dealerHandTotal = 0;
+let dealerHandTotal;
 let suits = ['♠', '♣', '♥', '♦'];
 let cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10'];
 let honors = ['J', 'Q', 'K', 'A'];
-let welcomeMessage = '***Welcome to the Game of 21***';
 
 function prompt(message) {
   console.log(`=>${message}`);
@@ -36,6 +28,8 @@ function shuffle(array = []) {
     array.push(deck.splice(randomIndex, 1).toString());
   }
   deck = array;
+
+  return undefined;
 }
 
 function validHitOrStay() {
