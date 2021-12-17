@@ -10,8 +10,103 @@ let suits = ['♠', '♣', '♥', '♦'];
 let cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10'];
 let honors = ['J', 'Q', 'K', 'A'];
 
-function prompt(message) {
-  console.log(`=>${message}`);
+function announceWinner(result) {
+  switch (result) {
+    case 'bust':
+      return prompt(`Dealer busted! You win!`);
+    case 'tie':
+      return prompt(`Wow! It's a tie! Your cards ${playerCards} total ${playerHandTotal}. 
+      Dealer's cards ${dealerCards} total ${dealerHandTotal}.`);
+    case 'win':
+      return prompt(`You win! Your cards ${playerCards} total ${playerHandTotal}. 
+      Dealer's cards ${dealerCards} total ${dealerHandTotal}.`);
+    case 'loss':
+      return prompt(`The dealer won with ${dealerCards} totaling ${dealerHandTotal}. 
+      Your cards ${playerCards} total ${playerHandTotal}.`);
+  }
+
+  return undefined;
+}
+
+function calculateAces(values, total) {
+  if (total > 21 && values.includes(11)) {
+    let newValues = values.map(num => {
+      if (num === 11) {
+        return 1;
+      } else { return num }
+    });
+
+    if (values === playerCardValues) {
+      playerCardValues = newValues;
+      return calculateHandTotal(playerCardValues);
+    } else {
+      dealerCardValues = newValues;
+      return calculateHandTotal(dealerCardValues);
+    }
+  }
+
+  return total;
+}
+
+function calculateCardValues(hand) {
+  let valueArray = hand.map(card => {
+    if (honors.includes(card[0]) && card[0] !== 'A') {
+      return 10;
+    } else if (card[0] === 'A') {
+      return 11;
+    } else { return parseFloat(card) }
+  });
+  if (hand === playerCards) playerCardValues = valueArray;
+  if (hand === dealerCards) dealerCardValues = valueArray;
+  return undefined;
+}
+
+function calculateHandTotal(values) {
+  let total = values.reduce((accumulator, number) => accumulator + number);
+
+  if (values === playerCardValues) {
+    playerHandTotal = calculateAces(values, total);
+  } else { dealerHandTotal = calculateAces(values, total) }
+
+  return total;
+}
+
+function clearTotalsForReplay() {
+  deck = [];
+  playerCards = [];
+  playerCardValues = [];
+  playerHandTotal = 0;
+  dealerCards = [];
+  dealerCardValues = [];
+  dealerHandTotal = 0;
+}
+
+function dealTwo(deck, playerCards, dealerCards) {
+  for (let idx = 0; idx < 2; idx++) {
+    playerCards.push(deck.splice(0, 1).toString());
+    dealerCards.push(deck.splice(0, 1).toString());
+  }
+}
+
+function dealOne(deck, cards) {
+  cards.push(deck.shift());
+}
+
+function determineWinner(playerHandTotal, dealerHandTotal) {
+  if (dealerHandTotal > 21) {
+    return announceWinner('bust');
+  }
+  if (dealerHandTotal === playerHandTotal) {
+    return announceWinner('tie');
+  }
+  if (playerHandTotal > dealerHandTotal) {
+    return announceWinner('win');
+  }
+  if (dealerHandTotal > playerHandTotal) {
+    return announceWinner('loss');
+  }
+
+  return undefined;
 }
 
 function initializeDeck(deck) {
@@ -20,6 +115,10 @@ function initializeDeck(deck) {
     honors.forEach(honor => deck.push(honor + suits[idx]));
   }
   return deck;
+}
+
+function prompt(message) {
+  console.log(`=>${message}`);
 }
 
 function shuffle(array = []) {
@@ -65,105 +164,6 @@ function validReplay() {
   return response;
 }
 
-function dealTwo(deck, playerCards, dealerCards) {
-  for (let idx = 0; idx < 2; idx++) {
-    playerCards.push(deck.splice(0, 1).toString());
-    dealerCards.push(deck.splice(0, 1).toString());
-  }
-}
-
-function calculateCardValues(hand) {
-  let valueArray = hand.map(card => {
-    if (honors.includes(card[0]) && card[0] !== 'A') {
-      return 10;
-    } else if (card[0] === 'A') {
-      return 11;
-    } else { return parseFloat(card) }
-  });
-  if (hand === playerCards) playerCardValues = valueArray;
-  if (hand === dealerCards) dealerCardValues = valueArray;
-  return undefined;
-}
-
-function calculateHandTotal(values) {
-  let total = values.reduce((accumulator, number) => accumulator + number);
-
-  if (values === playerCardValues) {
-    playerHandTotal = calculateAces(values, total);
-  } else { dealerHandTotal = calculateAces(values, total) }
-
-  return total;
-}
-
-function clearTotalsForReplay() {
-  deck = [];
-  playerCards = [];
-  playerCardValues = [];
-  playerHandTotal = 0;
-  dealerCards = [];
-  dealerCardValues = [];
-  dealerHandTotal = 0;
-}
-
-function calculateAces(values, total) {
-  if (total > 21 && values.includes(11)) {
-    let newValues = values.map(num => {
-      if (num === 11) {
-        return 1;
-      } else { return num }
-    });
-
-    if (values === playerCardValues) {
-      playerCardValues = newValues;
-      return calculateHandTotal(playerCardValues);
-    } else {
-      dealerCardValues = newValues;
-      return calculateHandTotal(dealerCardValues);
-    }
-  }
-
-  return total;
-}
-
-function dealOne(deck, cards) {
-  cards.push(deck.shift());
-}
-
-function determineWinner(playerHandTotal, dealerHandTotal) {
-  if (dealerHandTotal > 21) {
-    return announceWinner('bust');
-  }
-  if (dealerHandTotal === playerHandTotal) {
-    return announceWinner('tie');
-  }
-  if (playerHandTotal > dealerHandTotal) {
-    return announceWinner('win');
-  }
-  if (dealerHandTotal > playerHandTotal) {
-    return announceWinner('loss');
-  }
-
-  return undefined;
-}
-
-function announceWinner(result) {
-  switch (result) {
-    case 'bust':
-      return prompt(`Dealer busted! You win!`);
-    case 'tie':
-      return prompt(`Wow! It's a tie! Your cards ${playerCards} total ${playerHandTotal}. 
-      Dealer's cards ${dealerCards} total ${dealerHandTotal}.`);
-    case 'win':
-      return prompt(`You win! Your cards ${playerCards} total ${playerHandTotal}. 
-      Dealer's cards ${dealerCards} total ${dealerHandTotal}.`);
-    case 'loss':
-      return prompt(`The dealer won with ${dealerCards} totaling ${dealerHandTotal}. 
-      Your cards ${playerCards} total ${playerHandTotal}.`);
-  }
-
-  return undefined;
-}
-
 do {
   console.clear();
   prompt(`***Welcome to THE GAME OF 21***\n\nThe player (you or dealer) who comes closest to 21, without exceeding 21, wins.`);
@@ -173,9 +173,7 @@ do {
   shuffle();
 
   dealTwo(deck, playerCards, dealerCards);
-  calculateCardValues(dealerCards);
   calculateCardValues(playerCards);
-  calculateHandTotal(dealerCardValues);
   calculateHandTotal(playerCardValues);
 
   console.clear();
